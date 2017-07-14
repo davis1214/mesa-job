@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.typesafe.play:play-datacommons_2.10:2.4.0-M2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../mvn-repos/com/typesafe/play/play-datacommons_2.10/2.4.0-M2/play-datacommons_2.10-2.4.0-M2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../mvn-repos/com/typesafe/play/play-datacommons_2.10/2.4.0-M2/play-datacommons_2.10-2.4.0-M2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../mvn-repos/com/typesafe/play/play-datacommons_2.10/2.4.0-M2/play-datacommons_2.10-2.4.0-M2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.typesafe.play:build-link:2.4.0-M2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../mvn-repos/com/typesafe/play/build-link/2.4.0-M2/build-link-2.4.0-M2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../mvn-repos/com/typesafe/play/build-link/2.4.0-M2/build-link-2.4.0-M2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../mvn-repos/com/typesafe/play/build-link/2.4.0-M2/build-link-2.4.0-M2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaSbtSettings">
+    <option name="customLauncherPath" value="$PROJECT_DIR$/../../../develop/sbt/bin/sbt" />
+    <option name="customVMPath" value="$USER_HOME$" />
+  </component>
+</project>
