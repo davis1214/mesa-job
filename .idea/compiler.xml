@@ -21,16 +21,18 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="mesa-common" />
         <module name="mesa-jstorm-job" />
         <module name="mesa-spark-job" />
         <module name="mesa-streaming-job" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.7">
-      <module name="mesa-job" target="1.7" />
-      <module name="mesa-jstorm-job" target="1.7" />
+      <module name="mesa-common" target="1.8" />
+      <module name="mesa-job" target="1.8" />
+      <module name="mesa-jstorm-job" target="1.8" />
       <module name="mesa-spark-job" target="1.7" />
-      <module name="mesa-streaming-job" target="1.7" />
+      <module name="mesa-streaming-job" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

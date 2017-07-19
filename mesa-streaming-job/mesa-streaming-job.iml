@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -8,11 +8,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/scala" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/src/test/scala/test" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="scala-sdk-2.11.8" level="application" />
     <orderEntry type="library" name="Maven: org.apache.hbase:hbase-client:1.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.hbase:hbase-annotations:1.1.2" level="project" />
     <orderEntry type="module-library">
@@ -170,6 +173,20 @@
     <orderEntry type="library" name="Maven: net.razorvine:pyrolite:4.9" level="project" />
     <orderEntry type="library" name="Maven: net.sf.py4j:py4j:0.9" level="project" />
     <orderEntry type="library" name="Maven: org.spark-project.spark:unused:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.spark:spark-streaming_2.10:1.6.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.spark:spark-streaming-kafka_2.10:1.6.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.spark:spark-sql_2.10:1.6.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.spark:spark-catalyst_2.10:1.6.0" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.janino:janino:2.7.8" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.janino:commons-compiler:2.7.8" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.parquet:parquet-column:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.parquet:parquet-common:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.parquet:parquet-encoding:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.parquet:parquet-generator:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.parquet:parquet-hadoop:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.parquet:parquet-format:2.3.0-incubating" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.parquet:parquet-jackson:1.7.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.scopt:scopt_2.10:3.3.0" level="project" />
     <orderEntry type="library" name="Maven: net.sourceforge.jregex:jregex:1.2_01" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.16" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.5.8" level="project" />
@@ -191,6 +208,5 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.scalatest:scalatest_2.10:2.0.M6-SNAP8" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.2.4" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:16.0.1" level="project" />
-    <orderEntry type="library" name="scala-sdk-2.11.8" level="application" />
   </component>
 </module>

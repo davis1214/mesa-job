@@ -51,7 +51,8 @@ public class SimpleDataTestSpout extends BaseRichSpout {
             String hash1 = String.format("%04d", j);
             long time = System.currentTimeMillis();
             String a = String.format("%016x", time);
-            _collector.emit(new Values(String.valueOf(System.currentTimeMillis()) + " " + hash + a + "0a010f50" + hash1 + " 0.1.1 1 1|1|/final.do|payCashier|10.1.15.80|-|0|15|1|200"));
+            _collector.emit(new Values(String.valueOf(System.currentTimeMillis()) + " " + hash + a + "0a010f50" + hash1 + " 0.1.1 1 1|1|/final.do|payCashier|192.1.1.15" +
+                    ".80|-|0|15|1|200"));
             // }
             Utils.sleep(1);
         }

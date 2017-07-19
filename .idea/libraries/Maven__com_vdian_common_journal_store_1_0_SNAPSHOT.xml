@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: com.vdian.common:journal-store:1.0-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../mvn-repos/com/vdian/common/journal-store/1.0-SNAPSHOT/journal-store-1.0-SNAPSHOT.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../mvn-repos/com/vdian/common/journal-store/1.0-SNAPSHOT/journal-store-1.0-20170418.103636-12.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/../../mvn-repos/com/vdian/common/journal-store/1.0-SNAPSHOT/journal-store-1.0-SNAPSHOT-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../mvn-repos/com/vdian/common/journal-store/1.0-SNAPSHOT/journal-store-1.0-20170418.103636-12-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../mvn-repos/com/vdian/common/journal-store/1.0-SNAPSHOT/journal-store-1.0-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../mvn-repos/com/vdian/common/journal-store/1.0-SNAPSHOT/journal-store-1.0-20170418.103636-12-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
