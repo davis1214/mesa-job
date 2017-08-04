@@ -62,6 +62,9 @@ object PublicRtJob extends RtJob {
       streamProcess(kc, broadcast, param.topic, lines, lineAccumulator)
       logInfo("line-batch-accumulator:" + lbatchAccumulator.value + " , line-accumulator:" + lineAccumulator)
 
+
+
+
       ssc.start()
       daemonThread(ssc, param.jobId).start()
       ssc.awaitTermination()

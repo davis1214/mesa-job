@@ -20,7 +20,9 @@ import org.slf4j.{Logger, LoggerFactory}
 class MesaBaseBolt extends BaseRichBolt {
 
   private val logger: Logger = LoggerFactory.getLogger(classOf[MesaBaseBolt])
+
   protected var meticCounter: ConcurrentHashMap[String, AtomicLong] = null
+
   protected val parserCost: String = "parserCost"
   protected val TupleCount: String = "TupleCount"
   protected val HbasePut: String = "HbasePut"
@@ -29,13 +31,15 @@ class MesaBaseBolt extends BaseRichBolt {
   protected val TableFlushCount: String = "TableFlushCount"
   protected val ExecuteCost: String = "ExecuteCost"
   protected val PutCount: String = "PutCount"
+
   protected var lastTime: AtomicLong = new AtomicLong(0l)
   protected var lastPrintTime: AtomicLong = new AtomicLong(0l)
   protected var shouldRecordToOpentsdb: Boolean = false
+
   protected var opentsdbClient: ShuffledOpentsdbClient = null
+
   protected var stormConf: util.Map[_, _] = null
   private var cache: LoadingCache[String, String] = null
-
 
   override def prepare(stormConf: util.Map[_, _], context: TopologyContext, collector: OutputCollector): Unit = {
     this.stormConf = stormConf
@@ -92,18 +96,21 @@ class MesaBaseBolt extends BaseRichBolt {
     if ((System.currentTimeMillis - lastPrintTime.get) > 60 * 1000) {
       logger.info("taskIndex " + Thread.currentThread.getName + " , emitMeticCounter " + meticCounter.toString)
       if (shouldRecordToOpentsdb) {
-        val builder: MetricBuilder = MetricBuilder.getInstance
+
+        val builder = MetricBuilder.getInstance
         val metricName: String = stormConf.get("topName").toString
         val timestamp: Long = System.currentTimeMillis / 1000
+
         val keys: util.Enumeration[String] = meticCounter.keys
         while (keys.hasMoreElements) {
           val key: String = keys.nextElement
           val value: Long = meticCounter.get(key).get
           val tags: util.Map[String, String] = getBasicMetricTags
           tags.put(key, key)
-          val newMetric: Metric = new Metric(metricName, timestamp, value, tags)
+          val newMetric = new Metric(metricName, timestamp, value, tags)
           builder.addMetric(newMetric)
         }
+
         opentsdbClient.putData(builder)
       }
       meticCounter.clear
@@ -123,6 +130,5 @@ class MesaBaseBolt extends BaseRichBolt {
 
 
   override def declareOutputFields(declarer: OutputFieldsDeclarer): Unit = {
-    this.declareOutputFields(OutputFieldsDeclarer)
   }
 }

@@ -12,10 +12,10 @@
 
 
     <modules>
+        <module>mesa-common</module>
         <module>mesa-jstorm-job</module>
         <module>mesa-spark-job</module>
         <module>mesa-streaming-job</module>
-        <module>mesa-common</module>
     </modules>
 
     <properties>

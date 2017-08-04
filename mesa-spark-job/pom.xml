@@ -23,6 +23,7 @@
 
     <dependencies>
 
+
         <dependency>
             <groupId>com.github.nscala-time</groupId>
             <artifactId>nscala-time_2.11</artifactId>
