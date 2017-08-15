@@ -10,6 +10,7 @@ import backtype.storm.topology.base.BaseRichBolt
 import backtype.storm.tuple.Tuple
 import com.di.mesa.common.opentsdb.ShuffledOpentsdbClient
 import com.di.mesa.common.opentsdb.builder.{Metric, MetricBuilder}
+import com.di.mesa.job.jstorm.configure.MesaConfigure
 import com.google.common.cache.{CacheBuilder, CacheLoader, LoadingCache}
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -23,22 +24,37 @@ class MesaBaseBolt extends BaseRichBolt {
 
   protected var meticCounter: ConcurrentHashMap[String, AtomicLong] = null
 
-  protected val parserCost: String = "parserCost"
+
+  protected val UpdateSellerIdCost: String = "UpdateSellerIdCost"
+  protected val ParserCost: String = "ParserCost"
   protected val TupleCount: String = "TupleCount"
   protected val HbasePut: String = "HbasePut"
   protected val ConstructHbasePut: String = "ConstructHbasePut"
   protected val TableFlushCommits: String = "TableFlushCommit"
+  protected val TableFlushCommitCost: String = "FlushCommitCost"
   protected val TableFlushCount: String = "TableFlushCount"
   protected val ExecuteCost: String = "ExecuteCost"
   protected val PutCount: String = "PutCount"
+  protected val PutCost: String = "PutCost"
+  protected val ErrorCount: String = "ErrorCount"
+  protected val SendCount: String = "SendCount"
+  protected val SendCost: String = "SendCost"
+  protected val SendErrCount: String = "SendErrCount"
+  protected val BlackListCount: String = "BlackListCount"
+  protected val AggrCount: String = "AggrCount"
+  protected val VagueCount: String = "VagueCount"
+  protected val ErrorData: String = "ErrorData"
+  protected val EmitCount: String = "EmitCount"
 
+  protected var costTime: AtomicLong = new AtomicLong(0l)
   protected var lastTime: AtomicLong = new AtomicLong(0l)
   protected var lastPrintTime: AtomicLong = new AtomicLong(0l)
+
   protected var shouldRecordToOpentsdb: Boolean = false
-
   protected var opentsdbClient: ShuffledOpentsdbClient = null
-
   protected var stormConf: util.Map[_, _] = null
+
+  protected var shouldStartCache: Boolean = false
   private var cache: LoadingCache[String, String] = null
 
   override def prepare(stormConf: util.Map[_, _], context: TopologyContext, collector: OutputCollector): Unit = {
@@ -58,11 +74,18 @@ class MesaBaseBolt extends BaseRichBolt {
       opentsdbClient = new ShuffledOpentsdbClient(opentsdbUrl)
     }
 
-    cache = CacheBuilder.newBuilder.maximumSize(1000).expireAfterWrite(10, TimeUnit.MINUTES).build(new CacheLoader[String, String]() {
-      def load(s: String): String = {
-        return null
+    //open cache
+    if (stormConf.containsKey("busi.cache.should.start")) {
+      shouldStartCache = stormConf.get("busi.cache.should.start").toString.toBoolean
+      if (shouldStartCache) {
+        cache = CacheBuilder.newBuilder.maximumSize(10000).expireAfterWrite(10, TimeUnit.MINUTES).build(new CacheLoader[String, String]() {
+          def load(s: String): String = {
+            return null
+          }
+        })
       }
-    })
+    }
+
   }
 
 
@@ -93,12 +116,13 @@ class MesaBaseBolt extends BaseRichBolt {
   }
 
   protected def recordMonitorLog {
-    if ((System.currentTimeMillis - lastPrintTime.get) > 60 * 1000) {
+    val timeSpan: Long = System.currentTimeMillis - lastPrintTime.get
+    if (timeSpan > 60 * 1000) {
       logger.info("taskIndex " + Thread.currentThread.getName + " , emitMeticCounter " + meticCounter.toString)
       if (shouldRecordToOpentsdb) {
 
         val builder = MetricBuilder.getInstance
-        val metricName: String = stormConf.get("topName").toString
+        val metricName: String = stormConf.get(MesaConfigure.TOPOLOGY_NAME).toString
         val timestamp: Long = System.currentTimeMillis / 1000
 
         val keys: util.Enumeration[String] = meticCounter.keys
@@ -117,6 +141,17 @@ class MesaBaseBolt extends BaseRichBolt {
       lastPrintTime.set(System.currentTimeMillis)
     }
   }
+
+  protected def afterExecute {
+    recordCounter(meticCounter, ExecuteCost, (System.currentTimeMillis - costTime.get))
+    recordMonitorLog
+  }
+
+  protected def beforeExecute {
+    costTime.set(System.currentTimeMillis)
+    recordCounter(meticCounter, TupleCount)
+  }
+
 
   protected def getBasicMetricTags: java.util.Map[String, String] = {
     val tags: util.HashMap[String, String] = new util.HashMap[String, String]

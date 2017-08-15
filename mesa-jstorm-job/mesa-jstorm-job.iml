@@ -18,6 +18,7 @@
     <orderEntry type="library" name="Maven: com.rabbitmq:amqp-client:3.6.5" level="project" />
     <orderEntry type="module" module-name="mesa-common" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.5" level="project" />
+    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.4" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.5" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.5" level="project" />
@@ -99,7 +100,6 @@
     <orderEntry type="library" name="Maven: org.clojure:math.numeric-tower:0.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.clojure:tools.cli:0.2.4" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-exec:1.1" level="project" />
-    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.5" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1" level="project" />
     <orderEntry type="library" name="Maven: com.twitter:carbonite:1.4.0" level="project" />
     <orderEntry type="library" name="Maven: com.esotericsoftware.kryo:kryo:2.21" level="project" />
@@ -116,9 +116,9 @@
     <orderEntry type="library" name="Maven: jline:jline:2.11" level="project" />
     <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.storm:storm-kafka:0.9.3" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.10" level="project" />
     <orderEntry type="library" name="Maven: net.sourceforge.jregex:jregex:1.2_01" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.16" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.5.8" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-nop:1.5.8" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.5.8" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.11.8" level="project" />

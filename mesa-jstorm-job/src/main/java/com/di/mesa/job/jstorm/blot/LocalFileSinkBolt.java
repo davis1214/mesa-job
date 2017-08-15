@@ -5,10 +5,10 @@ import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
-import com.di.mesa.job.jstorm.configure.CommonConfiure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -52,33 +52,31 @@ public class LocalFileSinkBolt extends MesaBaseBolt {
     }
 
     public void execute(Tuple input) {
+        beforeExecute();
 
         try {
-            recordCounter(meticCounter, TupleCount);
-
-            if (input.getSourceComponent().equals(CommonConfiure.TICK_SPOUT_NAME)) {
-                if (isLocalMode) {
-                    for (String rowLog : rowLogList) {
-                        recordToLocalPath(rowLog);
-                    }
-                    rowLogList.clear();
-                }
-
-                collector.ack(input);
+            if (isTickComponent(input)) {
+                procTickTuple(input);
                 return;
             }
 
-            costTime.set(System.currentTimeMillis());
             String rawLog = input.getString(0);
             rowLogList.add(rawLog);
-            recordCounter(meticCounter, ExecuteCost, (System.currentTimeMillis() - costTime.get()));
         } catch (Exception e) {
             recordCounter(meticCounter, ErrorCount);
             logger.error(e.getMessage(), e);
         }
 
         collector.ack(input);
+        afterExecute();
     }
+
+
+    protected void procTickTuple(Tuple input) throws IOException {
+        collector.ack(input);
+        super.procTickTuple(input);
+    }
+
 
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declareStream("trade_notify", new Fields("field"));

@@ -5,8 +5,8 @@ import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Tuple;
-import com.weidian.di.storm.mesa.metric.tool.TpsCounter;
-import com.weidian.di.storm.mesa.storm.sample.bean.TradeCustomer;
+import com.di.mesa.job.jstorm.bean.TradeCustomer;
+import com.di.mesa.job.jstorm.common.TpsCounter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ public class TotalCount implements IRichBolt {
         // TODO Auto-generated method stub
         this.collector = collector;
         
-        tpsCounter = new TpsCounter(context.getThisComponentId() + 
+        tpsCounter = new TpsCounter(context.getThisComponentId() +
                 ":" + context.getThisTaskId());
         
         LOG.info("Finished preparation");

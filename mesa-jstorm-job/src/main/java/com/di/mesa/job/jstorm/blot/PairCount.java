@@ -7,8 +7,8 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
-import com.weidian.di.storm.mesa.metric.tool.TpsCounter;
-import com.weidian.di.storm.mesa.storm.sample.bean.Pair;
+import com.di.mesa.job.jstorm.bean.Pair;
+import com.di.mesa.job.jstorm.common.TpsCounter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +26,7 @@ public class PairCount implements IBasicBolt {
 
 	private AtomicLong  sum = new AtomicLong(0);
 	
-	private TpsCounter          tpsCounter;
+	private TpsCounter tpsCounter;
 
 	public void prepare(Map conf, TopologyContext context) {
 	    tpsCounter = new TpsCounter(context.getThisComponentId() + 

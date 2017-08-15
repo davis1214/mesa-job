@@ -5,7 +5,7 @@ import java.util
 import backtype.storm.topology.TopologyBuilder
 import backtype.storm.utils.Utils
 import backtype.storm.{LocalCluster, StormSubmitter}
-import com.di.mesa.job.jstorm.configure.{RabbitmqConfigure, MesaConfigure}
+import com.di.mesa.job.jstorm.configure.{MesaConfigure, RabbitmqConfigure}
 import com.di.mesa.job.jstorm.spout.{RabbitMQSpout, TickSpout}
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -78,8 +78,9 @@ private[mesa] trait DIBaseTopology extends Tool {
   }
 
 
+  //vhost : String, queueName : String, host : String, userName : String, password : String, port : String, routeKey : String, busiMsgType : String
   protected def getRabbitMQSpout: RabbitMQSpout = new RabbitMQSpout(config.getString(RabbitmqConfigure.VHOST_MARKER), config.getString(RabbitmqConfigure.QUEUE_NAME_MARKER)
     , config.getString(RabbitmqConfigure.HOST_MARKER), config.getString(RabbitmqConfigure.USER_NAME_MARKER), config.getString(RabbitmqConfigure.PASSWD_MARKER),
-    config.getString(RabbitmqConfigure.PORT_MARKER))
+    config.getString(RabbitmqConfigure.PORT_MARKER), config.getString(RabbitmqConfigure.ROUTEKEY_MARKER), RabbitmqConfigure.RABBITMQ_DEFAULT_STREAM_ID)
 
 }

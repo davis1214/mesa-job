@@ -13,8 +13,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by davi on 17/7/31.
@@ -23,6 +25,7 @@ public class RabbitMQSpout extends BaseRichSpout {
 
     private static final Logger logger = LoggerFactory.getLogger(RabbitMQSpout.class);
     private SpoutOutputCollector _collector;
+    private String taskId;
 
     private String queueName = null;
     private String host = null;
@@ -46,8 +49,18 @@ public class RabbitMQSpout extends BaseRichSpout {
     private Channel channel;
     private AtomicBoolean isReady = new AtomicBoolean(false);
 
+
+    //metric
+    private final String TupleCount = "TupleCount";
+    private final String EmitCost = "EmitCost";
+    private AtomicLong lastTime = new AtomicLong(0L);
+    private AtomicLong lastPrintTime = new AtomicLong(0L);
+    private ConcurrentHashMap<String, AtomicLong> meticCounter = null;
+
+
     public RabbitMQSpout() {
     }
+
 
     public RabbitMQSpout(String vhost, String queueName, String host, String userName, String password,String port) {
         this.vhost = vhost;
@@ -71,6 +84,8 @@ public class RabbitMQSpout extends BaseRichSpout {
         this.busiMsgType = busiMsgType;
     }
 
+
+
     public RabbitMQSpout(String busiMsgType) {
         this.busiMsgType = busiMsgType;
 
@@ -83,9 +98,11 @@ public class RabbitMQSpout extends BaseRichSpout {
 
     public void open(Map config, TopologyContext context, SpoutOutputCollector collector) {
         this._collector = collector;
-        int index = context.getThisTaskIndex();
+        taskId = context.getThisComponentId();
+
         isReady.set(openRabbitMQChannel());
-        logger.info("task {} is ready : {}", index, isReady);
+        meticCounter = new ConcurrentHashMap();
+        logger.info("task {} is ready : {}", taskId, isReady);
     }
 
     private boolean openRabbitMQChannel() {
@@ -165,14 +182,44 @@ public class RabbitMQSpout extends BaseRichSpout {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
                     throws IOException {
+                //count & cost
+                lastTime.set(System.currentTimeMillis());
+                recordCounter(meticCounter, TupleCount);
                 String message = new String(body, "UTF-8");
                 _collector.emit(busiMsgType, new Values(new Object[]{message}));
                 channel.basicAck(envelope.getDeliveryTag(), false);
+                recordCounter(meticCounter, EmitCost, (System.currentTimeMillis() - lastTime.get()));
+                recordMonitorLog();
             }
         };
 
         channel.basicConsume(queueName, RabbitmqConfigure.AUTOACK, consumer);  //设置自动确认为false
     }
+
+
+    private void recordMonitorLog() {
+        long timeSpan = System.currentTimeMillis() - this.lastPrintTime.get();
+        if (timeSpan > 60000L) {
+            logger.info("taskIndex {} , Metic_Info {} , Time_Span {}", taskId, this.meticCounter.toString(), timeSpan);
+            this.meticCounter.clear();
+            this.lastPrintTime.set(System.currentTimeMillis());
+        }
+    }
+
+    private void recordCounter(ConcurrentHashMap<String, AtomicLong> monitorCounter, String metricMonitor) {
+        if (!monitorCounter.containsKey(metricMonitor)) {
+            monitorCounter.put(metricMonitor, new AtomicLong(0L));
+        }
+        ((AtomicLong) monitorCounter.get(metricMonitor)).getAndIncrement();
+    }
+
+    private void recordCounter(ConcurrentHashMap<String, AtomicLong> monitorCounter, String metricMonitor, long total) {
+        if (!monitorCounter.containsKey(metricMonitor)) {
+            monitorCounter.put(metricMonitor, new AtomicLong(0L));
+        }
+        ((AtomicLong) monitorCounter.get(metricMonitor)).getAndAdd(total);
+    }
+
 
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declareStream(busiMsgType, new Fields(new String[]{"vcontent"}));

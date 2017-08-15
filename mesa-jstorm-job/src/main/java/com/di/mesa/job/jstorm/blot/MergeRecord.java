@@ -7,10 +7,10 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
-import com.weidian.di.storm.mesa.metric.tool.TpsCounter;
-import com.weidian.di.storm.mesa.storm.constant.SequenceTopologyDef;
-import com.weidian.di.storm.mesa.storm.sample.bean.Pair;
-import com.weidian.di.storm.mesa.storm.sample.bean.TradeCustomer;
+import com.di.mesa.job.jstorm.bean.Pair;
+import com.di.mesa.job.jstorm.bean.TradeCustomer;
+import com.di.mesa.job.jstorm.common.TpsCounter;
+import com.di.mesa.job.jstorm.configure.SequenceTopologyDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,7 +96,7 @@ public class MergeRecord implements IRichBolt {
         
         collector.ack(tradeTuple);
         collector.ack(customerTuple);
-        
+
         TradeCustomer tradeCustomer = new TradeCustomer();
         tradeCustomer.setTrade(trade);
         tradeCustomer.setCustomer(customer);
