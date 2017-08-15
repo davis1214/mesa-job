@@ -1,4 +1,4 @@
-package com.di.mesa.job.jstorm.configure;
+package com.di.mesa.common.constants;
 
 /**
  * Created by davi on 17/8/1.

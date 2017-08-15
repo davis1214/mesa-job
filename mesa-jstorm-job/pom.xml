@@ -15,11 +15,6 @@
     <artifactId>mesa-jstorm-job</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-            <version>3.6.5</version>
-        </dependency>
 
         <dependency>
             <groupId>com.di.mesa.common</groupId>

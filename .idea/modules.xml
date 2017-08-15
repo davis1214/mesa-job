@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/mesa-jstorm-job/mesa-jstorm-job.iml" filepath="$PROJECT_DIR$/mesa-jstorm-job/mesa-jstorm-job.iml" />
       <module fileurl="file://$PROJECT_DIR$/mesa-spark-job/mesa-spark-job.iml" filepath="$PROJECT_DIR$/mesa-spark-job/mesa-spark-job.iml" />
       <module fileurl="file://$PROJECT_DIR$/mesa-streaming-job/mesa-streaming-job.iml" filepath="$PROJECT_DIR$/mesa-streaming-job/mesa-streaming-job.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mesa-tool/mesa-tool.iml" filepath="$PROJECT_DIR$/mesa-tool/mesa-tool.iml" />
     </modules>
   </component>
 </project>

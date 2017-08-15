@@ -25,6 +25,7 @@
         <module name="mesa-jstorm-job" />
         <module name="mesa-spark-job" />
         <module name="mesa-streaming-job" />
+        <module name="mesa-tool" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.7">
@@ -33,6 +34,7 @@
       <module name="mesa-jstorm-job" target="1.8" />
       <module name="mesa-spark-job" target="1.7" />
       <module name="mesa-streaming-job" target="1.8" />
+      <module name="mesa-tool" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

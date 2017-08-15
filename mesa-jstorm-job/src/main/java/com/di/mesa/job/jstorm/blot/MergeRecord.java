@@ -9,8 +9,8 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import com.di.mesa.job.jstorm.bean.Pair;
 import com.di.mesa.job.jstorm.bean.TradeCustomer;
-import com.di.mesa.job.jstorm.common.TpsCounter;
 import com.di.mesa.job.jstorm.configure.SequenceTopologyDef;
+import com.di.mesa.job.jstorm.metric.TpsCounter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +39,7 @@ public class MergeRecord implements IRichBolt {
         // TODO Auto-generated method stub
         this.collector = collector;
         
-        tpsCounter = new TpsCounter(context.getThisComponentId() + 
+        tpsCounter = new TpsCounter(context.getThisComponentId() +
                 ":" + context.getThisTaskId());
         
         LOG.info("Finished preparation");
