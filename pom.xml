@@ -17,6 +17,7 @@
         <module>mesa-spark-job</module>
         <module>mesa-streaming-job</module>
         <module>mesa-tool</module>
+        <module>mesa-plugin</module>
     </modules>
 
     <properties>

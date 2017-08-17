@@ -11,36 +11,38 @@ import backtype.storm.utils.Utils;
 import java.util.Map;
 
 /**
- * Created by zhaoxican on 16/5/16.
+ * Created by davi on 17/8/15.
  */
 public class TickSpout extends BaseRichSpout {
-    private Map<String,Integer> tickMap ;
+    private Map<String, Integer> tickMap;
     private SpoutOutputCollector _collector;
-    int intervalSecond = 1;
+    private int intervalSecond = 1;
+    private int count = 0;
+    private int sleepTime = 1000 * this.intervalSecond;
 
-    public TickSpout(Map<String,Integer> tickMap , int intervalSecond){
+    public TickSpout(Map<String, Integer> tickMap, int intervalSecond) {
         this.tickMap = tickMap;
         this.intervalSecond = intervalSecond;
     }
 
 
-    public void open(Map conf, TopologyContext context, SpoutOutputCollector collector){
+    public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
         this._collector = collector;
+        this.sleepTime = 1000 * this.intervalSecond;
     }
 
-    public void nextTuple(){
-        int count = 0;
-        final int sleepTime = 1000 * this.intervalSecond;
-        while (true){
-            count++;
-            for (Map.Entry<String,Integer> entry:tickMap.entrySet()){
 
-                if (count % entry.getValue()==0){
-                    _collector.emit(entry.getKey(),new Values(entry.getValue()));
+    public void nextTuple() {
+        while (true) {
+            count++;
+            for (Map.Entry<String, Integer> entry : tickMap.entrySet()) {
+
+                if (count % entry.getValue() == 0) {
+                    _collector.emit(entry.getKey(), new Values(entry.getValue()));
                 }
             }
 
-            if (count == 99990)  count = 0;
+            if (count == 99990) count = 0;
             Utils.sleep(sleepTime);
         }
     }

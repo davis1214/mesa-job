@@ -1,11 +1,11 @@
 package com.di.mesa.tool.rabbitmq;
 
 
+import com.di.mesa.common.constants.RabbitmqConfigure;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.MessageProperties;
-import com.weidian.di.storm.mesa.storm.constant.RabbitmqConfigure;
 
 import java.io.IOException;
 import java.util.Date;

@@ -5,9 +5,10 @@ import java.util
 import backtype.storm.topology.TopologyBuilder
 import backtype.storm.utils.Utils
 import backtype.storm.{LocalCluster, StormSubmitter}
-import com.di.mesa.common.constants.RabbitmqConfigure
 import com.di.mesa.job.jstorm.configure.MesaConfigure
-import com.di.mesa.job.jstorm.spout.{RabbitMQSpout, TickSpout}
+import com.di.mesa.job.jstorm.spout.TickSpout
+import com.di.mesa.plugin.rabbitmq.RabbitmqConfigure
+import com.di.mesa.plugin.rabbitmq.storm.spout.RabbitMQSpout
 import org.slf4j.{Logger, LoggerFactory}
 
 /**

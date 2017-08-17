@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/mesa-common/mesa-common.iml" filepath="$PROJECT_DIR$/mesa-common/mesa-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/mesa-job.iml" filepath="$PROJECT_DIR$/mesa-job.iml" />
       <module fileurl="file://$PROJECT_DIR$/mesa-jstorm-job/mesa-jstorm-job.iml" filepath="$PROJECT_DIR$/mesa-jstorm-job/mesa-jstorm-job.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mesa-plugin/mesa-plugin.iml" filepath="$PROJECT_DIR$/mesa-plugin/mesa-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/mesa-spark-job/mesa-spark-job.iml" filepath="$PROJECT_DIR$/mesa-spark-job/mesa-spark-job.iml" />
       <module fileurl="file://$PROJECT_DIR$/mesa-streaming-job/mesa-streaming-job.iml" filepath="$PROJECT_DIR$/mesa-streaming-job/mesa-streaming-job.iml" />
       <module fileurl="file://$PROJECT_DIR$/mesa-tool/mesa-tool.iml" filepath="$PROJECT_DIR$/mesa-tool/mesa-tool.iml" />

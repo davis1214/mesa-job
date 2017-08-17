@@ -23,6 +23,7 @@
         <processorPath useClasspath="true" />
         <module name="mesa-common" />
         <module name="mesa-jstorm-job" />
+        <module name="mesa-plugin" />
         <module name="mesa-spark-job" />
         <module name="mesa-streaming-job" />
         <module name="mesa-tool" />
@@ -32,6 +33,7 @@
       <module name="mesa-common" target="1.8" />
       <module name="mesa-job" target="1.8" />
       <module name="mesa-jstorm-job" target="1.8" />
+      <module name="mesa-plugin" target="1.8" />
       <module name="mesa-spark-job" target="1.7" />
       <module name="mesa-streaming-job" target="1.8" />
       <module name="mesa-tool" target="1.8" />

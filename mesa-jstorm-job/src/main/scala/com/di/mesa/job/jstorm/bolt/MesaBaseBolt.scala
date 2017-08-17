@@ -8,8 +8,8 @@ import backtype.storm.task.{OutputCollector, TopologyContext}
 import backtype.storm.topology.OutputFieldsDeclarer
 import backtype.storm.topology.base.BaseRichBolt
 import backtype.storm.tuple.Tuple
-import com.di.mesa.common.opentsdb.ShuffledOpentsdbClient
-import com.di.mesa.common.opentsdb.builder.{Metric, MetricBuilder}
+import com.di.mesa.plugin.opentsdb.ShuffledOpentsdbClient
+import com.di.mesa.plugin.opentsdb.builder.{Metric, MetricBuilder}
 import com.di.mesa.job.jstorm.configure.MesaConfigure
 import com.google.common.cache.{CacheBuilder, CacheLoader, LoadingCache}
 import org.slf4j.{Logger, LoggerFactory}

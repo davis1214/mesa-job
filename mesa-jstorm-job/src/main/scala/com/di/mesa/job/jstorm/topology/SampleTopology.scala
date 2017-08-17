@@ -1,9 +1,9 @@
 package com.di.mesa.job.jstorm.topology
 
-import com.di.mesa.common.constants.RabbitmqConfigure
 import com.di.mesa.job.jstorm.blot.LocalFileSinkBolt
 import com.di.mesa.job.jstorm.configure.{CommonConfiure, MesaConfigure}
-import com.di.mesa.job.jstorm.spout.RabbitMQSpout
+import com.di.mesa.plugin.rabbitmq.RabbitmqConfigure
+import com.di.mesa.plugin.rabbitmq.storm.spout.RabbitMQSpout
 import org.slf4j.{Logger, LoggerFactory}
 
 
