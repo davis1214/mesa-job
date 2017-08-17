@@ -1,4 +1,4 @@
-package com.di.mesa.job.jstorm.metric;
+package com.di.mesa.plugin.metric;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

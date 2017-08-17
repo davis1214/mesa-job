@@ -128,3 +128,4 @@ hs_err_pid*
 .idea/libraries/Maven__org_codehaus_jackson_jackson_mapper_asl_1_9_5.xml
 
 *.iml
+*.idea

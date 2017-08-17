@@ -124,6 +124,6 @@ public class ZkPropertiesHelper {
     }
 
     public static abstract interface PropertyChangeListener {
-        public abstract void propertyChanged(String paramString1, String paramString2);
+        public abstract void propertyChanged(String oldValue, String newValue);
     }
 }

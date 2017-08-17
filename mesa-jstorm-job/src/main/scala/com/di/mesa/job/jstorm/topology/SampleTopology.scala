@@ -1,16 +1,17 @@
 package com.di.mesa.job.jstorm.topology
 
 import com.di.mesa.job.jstorm.blot.LocalFileSinkBolt
-import com.di.mesa.job.jstorm.configure.{CommonConfiure, MesaConfigure}
+import com.di.mesa.job.jstorm.configure.MesaConfigure
 import com.di.mesa.plugin.rabbitmq.RabbitmqConfigure
 import com.di.mesa.plugin.rabbitmq.storm.spout.RabbitMQSpout
+import com.di.mesa.plugin.storm.bolt.MesaBoltConfiure
 import org.slf4j.{Logger, LoggerFactory}
 
 
 /**
   * Created by davi on 17/8/4.
   */
-class SampleTopology extends DIBaseTopology {
+class SampleTopology extends MesaBaseTopology {
   @transient lazy private val LOG: Logger = LoggerFactory.getLogger(getClass)
   private var rabbitMQParallelism: Int = 2
   private var localFileSinkBoltParallelism: Int = 2
@@ -34,10 +35,10 @@ class SampleTopology extends DIBaseTopology {
     this.config.put(RabbitmqConfigure.PASSWD_MARKER, "test123456")
     this.config.put(RabbitmqConfigure.QUEUE_NAME_MARKER, "order.all.item.refund.status.di")
 
-    this.config.put(CommonConfiure.SHOULD_RECORD_METRIC_TO_OPENTSDB, "true")
-    this.config.put(CommonConfiure.OPENTSDB_URL, "http://10.8.96.120:4242,http://10.8.96.121:4242,http://10.8.96.122:4242")
+    this.config.put(MesaBoltConfiure.SHOULD_RECORD_METRIC_TO_OPENTSDB, "true")
+    this.config.put(MesaBoltConfiure.OPENTSDB_URL, "http://10.8.96.120:4242,http://10.8.96.121:4242,http://10.8.96.122:4242")
 
-    if (isLocalMode) {
+    if (config.isLocalMode) {
       workers = 1
       rabbitMQParallelism = 1
       localFileSinkBoltParallelism = 1

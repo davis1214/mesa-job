@@ -5,6 +5,7 @@ import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
+import com.di.mesa.plugin.storm.bolt.MesaBaseBolt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

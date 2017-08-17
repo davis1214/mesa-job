@@ -1,4 +1,4 @@
-package com.di.mesa.job.jstorm.metric;
+package com.di.mesa.plugin.metric;
 
 import java.io.Serializable;
 

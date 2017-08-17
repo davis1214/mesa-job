@@ -6,7 +6,7 @@ import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Tuple;
 import com.di.mesa.job.jstorm.bean.TradeCustomer;
-import com.di.mesa.job.jstorm.metric.TpsCounter;
+import com.di.mesa.plugin.metric.TpsCounter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

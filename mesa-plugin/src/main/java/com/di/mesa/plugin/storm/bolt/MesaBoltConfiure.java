@@ -1,9 +1,9 @@
-package com.di.mesa.job.jstorm.configure;
+package com.di.mesa.plugin.storm.bolt;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommonConfiure {
+public class MesaBoltConfiure {
 
     public static final String CONFIG_FILE_NAME = "server.properties";
     public static final long MINUTE = 60 * 1000;
@@ -13,7 +13,6 @@ public class CommonConfiure {
     public static final long DEFAULT_DAY = 20170101;
 
     public static final String TICK_SPOUT_NAME = "TICK_SPOUT";
-    public static final String BUSI_TOPOLOGY_NAME = "topology.name";
 
     // 是否启用白名单
     public static final String BUSI_WHITE_LIST_ENABLED = "busi.white.list.enabled";

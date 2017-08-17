@@ -1,4 +1,4 @@
-package com.di.mesa.job.jstorm.blot;
+package com.di.mesa.plugin.storm.bolt;
 
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
@@ -8,7 +8,7 @@ import backtype.storm.tuple.Tuple;
 import com.di.mesa.plugin.opentsdb.ShuffledOpentsdbClient;
 import com.di.mesa.plugin.opentsdb.builder.Metric;
 import com.di.mesa.plugin.opentsdb.builder.MetricBuilder;
-import com.di.mesa.job.jstorm.configure.CommonConfiure;
+import com.di.mesa.plugin.storm.CommonConfiure;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -35,13 +35,11 @@ public class MesaBaseBolt extends BaseRichBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(MesaBaseBolt.class);
 
-    protected ConcurrentHashMap<String, AtomicLong> meticCounter = null;
 
     protected static final String runningMode = "topology.running.type";
     protected static final String runningMode_Local = "local";
     protected static final String runningMode_Cluster = "cluster";
 
-    //private static final long BUFFER_SIZE = 6 * 1024 * 1024;
     protected final String _UNDER_LINE = "_";
 
     protected final String UpdateSellerIdCost = "UpdateSellerIdCost";
@@ -66,46 +64,52 @@ public class MesaBaseBolt extends BaseRichBolt {
     protected final String EmitCount = "EmitCount";
     protected final String TickCost = "TickCost";
 
+    protected Map stormConf;
+    protected boolean shouldStartCache = false;
+    protected LoadingCache<String, String> cache = null;
+
+    //local test
+    private BufferedWriter writer;
+    protected boolean isLocalMode = false;
+
+    protected boolean shouldEnableWhiteList = true;
+
+    protected int taskIndex;
+    protected String metricName;
+
+    protected boolean shouldRecordToOpentsdb;
+    protected ShuffledOpentsdbClient opentsdbClient;
+
+    //record
+    private List<String> rowLogList = null;
+    protected ConcurrentHashMap<String, AtomicLong> meticCounter = null;
+
     //metric
     protected AtomicLong costTime = new AtomicLong(0l);
     protected AtomicLong lastTime = new AtomicLong(0l);
     protected AtomicLong lastPrintTime = new AtomicLong(0l);
 
-    protected boolean shouldRecordToOpentsdb;
-    protected ShuffledOpentsdbClient opentsdbClient;
-
-    protected Map stormConf;
-    protected boolean shouldStartCache = false;
-    protected LoadingCache<String, String> cache = null;
-
-
-    //local test
-    private BufferedWriter writer;
-    protected boolean isLocalMode = false;
-    private List<String> rowLogList = null;
-
-    protected int taskIndex;
-    protected boolean shouldEnableWhiteList = true;
-
-
     @Override
     public void prepare(Map stormConf, TopologyContext topologyContext, OutputCollector outputCollector) {
         this.stormConf = stormConf;
-        this.taskIndex = topologyContext.getThisTaskIndex();
 
         //metric
+        taskIndex = topologyContext.getThisTaskIndex();
         meticCounter = new ConcurrentHashMap<>();
         lastPrintTime.set(System.currentTimeMillis());
         lastTime.set(System.currentTimeMillis());
         costTime.set(System.currentTimeMillis());
+        metricName = stormConf.get(CommonConfiure.MESA_TOPOLOGY_NAME).toString();
 
         shouldRecordToOpentsdb = false;
-        if (stormConf.containsKey(CommonConfiure.SHOULD_RECORD_METRIC_TO_OPENTSDB)) {
-            shouldRecordToOpentsdb = Boolean.valueOf(stormConf.get(CommonConfiure.SHOULD_RECORD_METRIC_TO_OPENTSDB).toString());
+        if (stormConf.containsKey(MesaBoltConfiure.SHOULD_RECORD_METRIC_TO_OPENTSDB)) {
+            shouldRecordToOpentsdb = Boolean.valueOf(stormConf.get(MesaBoltConfiure.SHOULD_RECORD_METRIC_TO_OPENTSDB).toString());
 
-            String opentsdbUrl = stormConf.get(CommonConfiure.OPENTSDB_URL).toString();
+            String opentsdbUrl = stormConf.get(MesaBoltConfiure.OPENTSDB_URL).toString();
             opentsdbClient = new ShuffledOpentsdbClient(opentsdbUrl);
         }
+
+
 
         //open cache
         if (stormConf.containsKey("busi.cache.should.start")) {
@@ -124,7 +128,7 @@ public class MesaBaseBolt extends BaseRichBolt {
         }
 
         try {
-            shouldEnableWhiteList = Boolean.valueOf(stormConf.get(CommonConfiure.BUSI_WHITE_LIST_ENABLED).toString());
+            shouldEnableWhiteList = Boolean.valueOf(stormConf.get(MesaBoltConfiure.BUSI_WHITE_LIST_ENABLED).toString());
         } catch (Exception e) {
             shouldEnableWhiteList = true;
         }
@@ -141,7 +145,7 @@ public class MesaBaseBolt extends BaseRichBolt {
     }
 
     protected boolean isTickComponent(Tuple input) {
-        return input.getSourceComponent().equals(CommonConfiure.TICK_SPOUT_NAME);
+        return input.getSourceComponent().equals(MesaBoltConfiure.TICK_SPOUT_NAME);
     }
 
     // white list filter
@@ -150,8 +154,8 @@ public class MesaBaseBolt extends BaseRichBolt {
             return true;
         }
 
-        //return shouldEnableWhiteList && !isLocalMode && !Arrays.asList(CommonConfiure.SELLER_TEST).contains(sellerId);
-        return shouldEnableWhiteList && !isLocalMode && !CommonConfiure.WhiteNameList.contains(sellerId);
+        //return shouldEnableWhiteList && !isLocalMode && !Arrays.asList(MesaBoltConfiure.SELLER_TEST).contains(sellerId);
+        return shouldEnableWhiteList && !isLocalMode && !MesaBoltConfiure.WhiteNameList.contains(sellerId);
     }
 
 
@@ -160,6 +164,44 @@ public class MesaBaseBolt extends BaseRichBolt {
         //super.execute(tuple);
     }
 
+
+    protected void recordMsgTolocal(String rawLog) {
+        rowLogList.add(System.currentTimeMillis() + " ----> " + rawLog);
+    }
+
+
+    protected void recordMonitorLog() {
+
+        long timeSpan = System.currentTimeMillis() - lastPrintTime.get();
+        if (timeSpan > 60 * 1000) {
+            logger.info("taskIndex {} , Metic_Info {} ,Time_Span {}", this.taskIndex, meticCounter.toString(), timeSpan);
+
+            if (shouldRecordToOpentsdb) {
+                recordToOpentsdb();
+            }
+
+            meticCounter.clear();
+            lastPrintTime.set(System.currentTimeMillis());
+        }
+    }
+
+    private void recordToOpentsdb() {
+        MetricBuilder builder = MetricBuilder.getInstance();
+        //String name, long timestamp, Object value, Map<String, String> tags
+
+        long timestamp = System.currentTimeMillis() / 1000;
+        Enumeration<String> keys = meticCounter.keys();
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            Long value = meticCounter.get(key).get();
+            Map<String, String> tags = getBasicMetricTags();
+            tags.put(key, key); //将监控指标都写入opentsdb
+            Metric newMetric = new Metric(metricName, timestamp, value, tags);
+            builder.addMetric(newMetric);
+        }
+
+        opentsdbClient.putData(builder);
+    }
 
     protected void afterExecute() {
         //失败后,也丢掉此消息
@@ -190,43 +232,6 @@ public class MesaBaseBolt extends BaseRichBolt {
         }
     }
 
-    protected void recordMsgTolocal(String rawLog) {
-        rowLogList.add(System.currentTimeMillis() + " ----> " + rawLog);
-    }
-
-
-    protected void recordMonitorLog() {
-
-        long timeSpan = System.currentTimeMillis() - lastPrintTime.get();
-        if (timeSpan > 60 * 1000) {
-            logger.info("taskIndex {} , Metic_Info {} ,Time_Span {}", this.taskIndex, meticCounter.toString(), timeSpan);
-
-            if (shouldRecordToOpentsdb) {
-                recordToOpentsdb();
-            }
-
-            meticCounter.clear();
-            lastPrintTime.set(System.currentTimeMillis());
-        }
-    }
-
-    private void recordToOpentsdb() {
-        MetricBuilder builder = MetricBuilder.getInstance();
-        //String name, long timestamp, Object value, Map<String, String> tags
-        String metricName = stormConf.get(CommonConfiure.BUSI_TOPOLOGY_NAME).toString();
-        long timestamp = System.currentTimeMillis() / 1000;
-        Enumeration<String> keys = meticCounter.keys();
-        while (keys.hasMoreElements()) {
-            String key = keys.nextElement();
-            Long value = meticCounter.get(key).get();
-            Map<String, String> tags = getBasicMetricTags();
-            tags.put(key, key); //将监控指标都写入opentsdb
-            Metric newMetric = new Metric(metricName, timestamp, value, tags);
-            builder.addMetric(newMetric);
-        }
-
-        opentsdbClient.putData(builder);
-    }
 
     protected Map<String, String> getBasicMetricTags() {
         Map<String, String> tags = Maps.newHashMap();
@@ -280,6 +285,6 @@ public class MesaBaseBolt extends BaseRichBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        this.declareOutputFields(outputFieldsDeclarer);
+        //super.declareOutputFields(outputFieldsDeclarer);
     }
 }

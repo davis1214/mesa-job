@@ -10,7 +10,7 @@ import backtype.storm.tuple.Values;
 import com.di.mesa.job.jstorm.bean.Pair;
 import com.di.mesa.job.jstorm.bean.TradeCustomer;
 import com.di.mesa.job.jstorm.configure.SequenceTopologyDef;
-import com.di.mesa.job.jstorm.metric.TpsCounter;
+import com.di.mesa.plugin.metric.TpsCounter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

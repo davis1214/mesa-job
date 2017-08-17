@@ -1,5 +1,7 @@
 package com.di.mesa.tool.zookeeper;
 
+import com.di.mesa.plugin.zookeeper.ZkManager;
+import com.di.mesa.plugin.zookeeper.ZkStringSerializer;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -64,9 +66,9 @@ public class ZkConfigPublisher {
     }
 
     public static void main(String[] args) {
-        String rootnode = "/hj/conf";
-        String file = "sample.properties";
-        String confDirPath = "/Users/Administrator/Documents/development/git/zookeeper-step/configYard/src/main/resources/conf";
+        String rootnode = "/mesa/conf";
+        String file = "mesa.properties";
+        String confDirPath = "/Users/Administrator/Documents/development/learn/mesa-job/mesa-tool/src/main/resources";
 
         ZkClient client = new ZkClient("localhost:2181", 50000);
         client.setZkSerializer(new ZkStringSerializer("UTF-8"));

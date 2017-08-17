@@ -9,30 +9,39 @@ import com.di.mesa.job.jstorm.configure.MesaConfigure
 import com.di.mesa.job.jstorm.spout.TickSpout
 import com.di.mesa.plugin.rabbitmq.RabbitmqConfigure
 import com.di.mesa.plugin.rabbitmq.storm.spout.RabbitMQSpout
+import com.di.mesa.plugin.storm.MesaTopologyBuilder
+import com.di.mesa.plugin.zookeeper.storm.spout.ZookeeperSpout
 import org.slf4j.{Logger, LoggerFactory}
 
 /**
   * Created by davi on 17/8/3.
   */
-private[mesa] trait DIBaseTopology extends Tool {
+private[mesa] trait MesaBaseTopology extends Tool {
 
   @transient lazy private val LOG: Logger = LoggerFactory.getLogger(getClass)
 
-  var topologyBuilder: TopologyBuilder = null
+  var topologyBuilder: MesaTopologyBuilder = null
   var workers: Int = 4
+
+  var shouldEnableZkNotifer: Boolean = false;
 
   @throws(classOf[Exception])
   def prepareTopologyConfig(args: Array[String]): Unit = {
 
     if (args.length <= 0) {
-      config.put(MesaConfigure.TOPOLOGY_NAME, getClass.getSimpleName)
-      config.put(MesaConfigure.RUNNING_MODE, MesaConfigure.RUNNING_MODE_LOCAL)
+      //      config.put(MesaConfigure.TOPOLOGY_NAME, getClass.getSimpleName)
+      //      config.put(MesaConfigure.RUNNING_MODE, MesaConfigure.RUNNING_MODE_LOCAL)
+      config.setTopologyName(getClass.getSimpleName)
+      config.setRunningMode(MesaConfigure.RUNNING_MODE_LOCAL)
       config.setDebug(false);
     } else {
       val topologyName = if (args.length > 0) args(0) else getClass.getSimpleName
       val runningMode = if (args.length > 1) args(1) else "local"
-      config.put(MesaConfigure.TOPOLOGY_NAME, topologyName)
-      config.put(MesaConfigure.RUNNING_MODE, runningMode.toLowerCase()) //default CommonConfigure.RUNNING_MODE_CLUSTER
+      /* config.put(MesaConfigure.TOPOLOGY_NAME, topologyName)
+       config.put(MesaConfigure.RUNNING_MODE, runningMode.toLowerCase()) //default CommonConfigure.RUNNING_MODE_CLUSTER*/
+      config.setTopologyName(topologyName)
+      config.setRunningMode(runningMode.toLowerCase())
+
     }
 
     config.setMaxSpoutPending(1000000);
@@ -41,19 +50,26 @@ private[mesa] trait DIBaseTopology extends Tool {
 
   @throws(classOf[Exception])
   def prepareTopologyBuilder(): Unit = {
-    LOG.info("prepareTopologyBuilder")
-    topologyBuilder = new TopologyBuilder
+    LOG.info("prepareTopologyBuilder ,shouldEnableZkNotifer ", shouldEnableZkNotifer)
+    topologyBuilder = new MesaTopologyBuilder(config)
+
+    if (config.shouldEnableNotifer()) {
+      val zkParallelism = 1
+      //MesaSpoutConfigure.MESA_STREAMING_ID
+      topologyBuilder.setSpout(config.getNotiferComponentId, new ZookeeperSpout(config.getNotiferStreamingId), zkParallelism)
+    }
   }
 
   @throws(classOf[Exception])
   def startTopology(): Unit = {
-    if (!isLocalMode) {
+    if (config.isClusterMode) {
       config.setNumWorkers(workers)
-      StormSubmitter.submitTopology(config.getString(MesaConfigure.TOPOLOGY_NAME), config, topologyBuilder.createTopology)
+      StormSubmitter.submitTopology(config.getTopologyName, config, topologyBuilder.createTopology)
     }
     else {
+      config.setNumWorkers(workers)
       val localCluster: LocalCluster = new LocalCluster
-      localCluster.submitTopology(config.getString(MesaConfigure.TOPOLOGY_NAME), config, topologyBuilder.createTopology)
+      localCluster.submitTopology(config.getTopologyName, config, topologyBuilder.createTopology)
       Utils.sleep(1000 * 60 * 4)
       localCluster.shutdown
     }
@@ -66,11 +82,7 @@ private[mesa] trait DIBaseTopology extends Tool {
     startTopology
   }
 
-
-  def isLocalMode: Boolean = {
-    val runningMode = config.getStringOrDefault(MesaConfigure.RUNNING_MODE, MesaConfigure.RUNNING_MODE_LOCAL)
-    runningMode.equals(MesaConfigure.RUNNING_MODE_LOCAL)
-  }
+  //def isLocalMode: Boolean = config.isLocalMode
 
   protected def getTickSpout: TickSpout = {
     val tickMap = new util.HashMap[String, Integer]

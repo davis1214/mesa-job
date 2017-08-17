@@ -1,7 +1,7 @@
 package com.di.mesa.tool.rabbitmq;
 
 
-import com.di.mesa.common.constants.RabbitmqConfigure;
+import com.di.mesa.plugin.rabbitmq.RabbitmqConfigure;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;

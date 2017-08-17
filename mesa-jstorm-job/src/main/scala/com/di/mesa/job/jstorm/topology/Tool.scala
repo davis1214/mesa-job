@@ -1,6 +1,6 @@
 package com.di.mesa.job.jstorm.topology
 
-import com.di.mesa.job.jstorm.configure.MesaConfig
+import com.di.mesa.plugin.storm.MesaConfig
 
 /**
   * Created by davi on 17/8/3.

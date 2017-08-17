@@ -16,8 +16,8 @@ object MesaConfigure {
   /**
     * configuration of topology (common)
     */
-  val TOPOLOGY_NAME: String = "topology.name"
-  val RUNNING_MODE: String = "topology.running.type"
+//  val TOPOLOGY_NAME: String = "topology.name"
+//  val RUNNING_MODE: String = "topology.running.type"
   val RUNNING_MODE_LOCAL: String = "local"
   val RUNNING_MODE_CLUSTER: String = "cluster"
   val SUBSCRIBED_TOPIC_NAME: String = "subscribe.topic.name"

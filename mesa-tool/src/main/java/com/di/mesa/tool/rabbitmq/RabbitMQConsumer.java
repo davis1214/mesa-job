@@ -1,8 +1,9 @@
 package com.di.mesa.tool.rabbitmq;
 
 
-import com.di.mesa.common.constants.RabbitmqConfigure;
+import com.di.mesa.plugin.rabbitmq.RabbitmqConfigure;
 import com.rabbitmq.client.*;
+
 import java.io.IOException;
 
 

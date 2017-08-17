@@ -1,5 +1,6 @@
 package com.di.mesa.tool.zookeeper;
 
+import com.di.mesa.plugin.zookeeper.ZkStringSerializer;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;

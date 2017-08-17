@@ -1,6 +1,7 @@
 package com.di.mesa.job.jstorm.topology
 
-import com.di.mesa.job.jstorm.configure.{GenericOptionsParser, MesaConfig}
+import com.di.mesa.job.jstorm.configure.GenericOptionsParser
+import com.di.mesa.plugin.storm.MesaConfig
 import org.slf4j.{Logger, LoggerFactory}
 import org.apache.commons.cli.ParseException
 
