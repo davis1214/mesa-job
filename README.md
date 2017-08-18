@@ -21,10 +21,16 @@ java(1.8) \scala (2.11.8)
 * spark
 * hbase
 * kafka
+* zookeeper
 
 
-#### 首期任务
-`绝大部分是自己完成实现,部分引入开源的一些.接下来会按步骤逐步优化,通用化相关的任务`
+#### jstorm-plugin
+* zookeeerspout
+* rabbitspout
+
+#### 未来规划
+`考虑集成最近比较火的serverless`
+
 
 
 
