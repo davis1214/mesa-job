@@ -25,7 +25,7 @@ class ConfigChangeTopology extends MesaBaseTopology {
     // cluster config
     workers = 2
 
-    this.config.put(MesaBoltConfiure.SHOULD_RECORD_METRIC_TO_OPENTSDB, "false")
+    this.config.put(MesaBoltConfiure.SHOULD_RECORD_METRIC_TO_OPENTSDB, "true")
     this.config.put(MesaBoltConfiure.OPENTSDB_URL, "http://10.8.96.120:4242,http://10.8.96.121:4242,http://10.8.96.122:4242")
 
     //common config

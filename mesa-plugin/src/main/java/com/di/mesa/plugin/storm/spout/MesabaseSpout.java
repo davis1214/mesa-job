@@ -7,6 +7,8 @@ import backtype.storm.topology.base.BaseRichSpout;
 import com.di.mesa.plugin.opentsdb.ShuffledOpentsdbClient;
 import com.di.mesa.plugin.opentsdb.builder.Metric;
 import com.di.mesa.plugin.opentsdb.builder.MetricBuilder;
+import com.di.mesa.plugin.storm.CommonConfiure;
+import com.di.mesa.plugin.storm.bolt.MesaBoltConfiure;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +71,19 @@ public class MesaBaseSpout extends BaseRichSpout {
             this.mesaStreamingId = conf.get(MesaSpoutConfigure.MESA_STREAMING_ID).toString();
         }
 
+        MeticInfo = new ConcurrentHashMap<>();
+        lastPrintTime.set(System.currentTimeMillis());
+        lastTime.set(System.currentTimeMillis());
+        costTime.set(System.currentTimeMillis());
+        metricName = conf.get(CommonConfiure.MESA_TOPOLOGY_NAME).toString();
+
+        shouldRecordToOpentsdb = false;
+        if (conf.containsKey(MesaBoltConfiure.SHOULD_RECORD_METRIC_TO_OPENTSDB)) {
+            shouldRecordToOpentsdb = Boolean.valueOf(conf.get(MesaBoltConfiure.SHOULD_RECORD_METRIC_TO_OPENTSDB).toString());
+
+            String opentsdbUrl = conf.get(MesaBoltConfiure.OPENTSDB_URL).toString();
+            opentsdbClient = new ShuffledOpentsdbClient(opentsdbUrl);
+        }
     }
 
 
@@ -109,7 +124,7 @@ public class MesaBaseSpout extends BaseRichSpout {
 
     protected Map<String, String> getBasicMetricTags() {
         Map<String, String> tags = Maps.newHashMap();
-        tags.put("bolt.name", this.getClass().getSimpleName());
+        tags.put("spout.name", this.getClass().getSimpleName());
         tags.put("task.index", String.valueOf(this.taskId));
         return tags;
     }

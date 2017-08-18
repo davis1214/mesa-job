@@ -11,9 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by davi on 17/8/1.
@@ -24,12 +22,7 @@ public class LocalFileSinkBolt extends MesaBaseBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(LocalFileSinkBolt.class);
 
-
-    private AtomicLong costTime = new AtomicLong(0l);
     private OutputCollector collector;
-
-    private boolean isLocalMode;
-    private List<String> rowLogList = null;
 
     public LocalFileSinkBolt() {
     }
@@ -40,9 +33,6 @@ public class LocalFileSinkBolt extends MesaBaseBolt {
 
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         this.collector = collector;
-        if (stormConf.containsKey(runningMode)) {
-            isLocalMode = stormConf.get(runningMode).equals(runningMode_Local) ? true : false;
-        }
         costTime.set(System.currentTimeMillis());
 
         if (isLocalMode) {

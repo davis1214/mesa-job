@@ -8,10 +8,16 @@ import backtype.storm.tuple.Values;
 import com.di.mesa.plugin.storm.spout.MesaBaseSpout;
 import com.di.mesa.plugin.zookeeper.*;
 import org.I0Itec.zkclient.ZkClient;
+import org.apache.http.client.utils.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.Date;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+import static java.lang.System.out;
 
 /**
  * Created by Davi on 17/8/15.
@@ -25,19 +31,20 @@ public class ZookeeperSpout extends MesaBaseSpout {
     private Map<String, String> stormConfMap;
 
 
-    private String streamingId ;
-    private ZkClient zkClient;
-    private ZkPropertiesHelperFactory helperFactory;
+    private String streamingId;
+    //private ZkPropertiesHelper helper;
+    private IZkConfigChangeSubscriber subscriber;
 
     private String zkServers = "localhost:2181";
     private int connTimeout = 10 * 1000;
 
-    private String zkpath = "/zkSample/conf/test.properties";
     private String zkConfFile = "mesa.properties"; //default zk conf file
     private String zkRootNodePath = "/mesa/conf"; //default zk conf file
 
-    private int intervalSecond = 1;
-    private int sleepTime = 1000 * this.intervalSecond;
+
+    private String SUBSCRIBE_COUNT = "subscribe.count";
+
+    private int intervalSecond = 60;
 
     public ZookeeperSpout(String streamingId) {
         this.streamingId = streamingId;
@@ -53,7 +60,6 @@ public class ZookeeperSpout extends MesaBaseSpout {
         this.collector = collector;
         super.open(conf, context, null);
 
-        this.sleepTime = 1000 * this.intervalSecond;
         openZookeeper(conf);
 
         logger.info("task id {} has opened", taskId);
@@ -76,23 +82,28 @@ public class ZookeeperSpout extends MesaBaseSpout {
             this.connTimeout = Integer.valueOf(conf.get(ZookeeperConfigure.ZOOKEEPER_MESA_CONN_TIMEOUT).toString());
         }
 
-        this.zkClient = new ZkClient(this.zkServers, this.connTimeout);
-        zkClient.setZkSerializer(new ZkStringSerializer("UTF-8"));
-        IZkConfigChangeSubscriber configChangeSubscriber = new ZkConfigChangeSubscriber(this.zkClient, this.zkRootNodePath);
-        this.helperFactory = new ZkPropertiesHelperFactory(configChangeSubscriber);
+//        ZkClient zkClient = new ZkClient(this.zkServers, this.connTimeout);
+//        zkClient.setZkSerializer(new ZkStringSerializer("UTF-8"));
+//        IZkConfigChangeSubscriber configChangeSubscriber = new ZkConfigChangeSubscriber(zkClient, this.zkRootNodePath);
+//        ZkPropertiesHelperFactory helperFactory = new ZkPropertiesHelperFactory(configChangeSubscriber);
+//        this.helper = helperFactory.getHelper(this.zkConfFile);
+
+
+        ZkClient client = new ZkClient(this.zkServers, this.connTimeout);
+        client.setZkSerializer(new ZkStringSerializer("UTF-8"));
+
+        this.subscriber = new ZkConfigChangeSubscriber(client, this.zkRootNodePath);
     }
 
 
     public void nextTuple() {
         if (!hasSubscribed.get()) {
-            if (subscribe()) {
-                hasSubscribed.set(true);
-                logger.info("subscribe {} successed", this.zkConfFile);
-            } else {
-                logger.info("subscribe {} failed", this.zkConfFile);
-            }
+            subscribe();
+            recordMetric(MeticInfo, SUBSCRIBE_COUNT);
+            logger.info("subscribe {} successed", this.zkConfFile);
         } else {
             logger.info("next tuple called ,but zookeeper has been listened ,would sleep 30 * 1000l ms!");
+
             try {
                 Thread.sleep(30 * 1000l);
             } catch (InterruptedException e) {
@@ -103,20 +114,20 @@ public class ZookeeperSpout extends MesaBaseSpout {
     private boolean subscribe() {
         boolean hasSubscribed = false;
         try {
-            ZkPropertiesHelper helper = this.helperFactory.getHelper(this.zkConfFile);
-            helper.registerListener("listener",
-                    new ZkPropertiesHelper.PropertyChangeListener() {
-                        public void propertyChanged(String oldValue, String newValue) {
-                            //System.out.println("property chaged: oldValue=" + oldValue + ", newValue=" + newValue);
-                            lastTime.set(System.currentTimeMillis());
-                            recordMetric(MeticInfo, EmitCount);
-                            collector.emit(mesaStreamingId, new Values(new Object[]{newValue, oldValue}));
-                            recordMetric(MeticInfo, EmitCost, (System.currentTimeMillis() - lastTime.get()));
-                            recordMonitorLog();
-                        }
-                    });
-
-            hasSubscribed = true;
+            final CountDownLatch countDownLatch = new CountDownLatch(10);
+            subscriber.subscribe(this.zkConfFile, new IZkConfigChangeListener() {
+                public void configChanged(String key, String value) {
+                    //out.println("test1接收到数据变更通知: key=" + key + ", value=" + value);
+                    lastTime.set(System.currentTimeMillis());
+                    recordMetric(MeticInfo, EmitCount);
+                    collector.emit(mesaStreamingId, new Values(new Object[]{key, value}));
+                    recordMetric(MeticInfo, EmitCost, (System.currentTimeMillis() - lastTime.get()));
+                    recordMonitorLog();
+                    countDownLatch.countDown();
+                }
+            });
+            countDownLatch.await(this.intervalSecond, TimeUnit.SECONDS);
+            hasSubscribed = false;
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             hasSubscribed = false;

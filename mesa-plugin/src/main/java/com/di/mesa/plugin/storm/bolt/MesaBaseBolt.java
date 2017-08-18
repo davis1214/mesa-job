@@ -36,9 +36,9 @@ public class MesaBaseBolt extends BaseRichBolt {
     private static final Logger logger = LoggerFactory.getLogger(MesaBaseBolt.class);
 
 
-    protected static final String runningMode = "topology.running.type";
-    protected static final String runningMode_Local = "local";
-    protected static final String runningMode_Cluster = "cluster";
+//    protected static final String runningMode = "topology.running.type";
+//    protected static final String runningMode_Local = "local";
+//    protected static final String runningMode_Cluster = "cluster";
 
     protected final String _UNDER_LINE = "_";
 
@@ -81,7 +81,7 @@ public class MesaBaseBolt extends BaseRichBolt {
     protected ShuffledOpentsdbClient opentsdbClient;
 
     //record
-    private List<String> rowLogList = null;
+    protected List<String> rowLogList = null;
     protected ConcurrentHashMap<String, AtomicLong> meticCounter = null;
 
     //metric
@@ -215,8 +215,8 @@ public class MesaBaseBolt extends BaseRichBolt {
     }
 
     protected boolean isLocalMode() {
-        if (stormConf.containsKey(runningMode)) {
-            isLocalMode = stormConf.get(runningMode).equals(runningMode_Local) ? true : false;
+        if (stormConf.containsKey(CommonConfiure.MESA_TOPOLOGY_RUNNING_MODE)) {
+            isLocalMode = stormConf.get(CommonConfiure.MESA_TOPOLOGY_RUNNING_MODE).equals(CommonConfiure.RUNNING_MODE_LOCAL) ? true : false;
         }
 
         return isLocalMode;
