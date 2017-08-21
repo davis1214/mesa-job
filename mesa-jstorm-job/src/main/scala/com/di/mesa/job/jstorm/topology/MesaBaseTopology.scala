@@ -5,12 +5,17 @@ import java.util
 import backtype.storm.topology.TopologyBuilder
 import backtype.storm.utils.Utils
 import backtype.storm.{LocalCluster, StormSubmitter}
-import com.di.mesa.job.jstorm.configure.MesaConfigure
-import com.di.mesa.job.jstorm.spout.TickSpout
+import com.di.mesa.job.jstorm.configure.{VdianMqConfigure, MesaConfigure}
+import com.di.mesa.job.jstorm.spout.{VdianMQSpout, TickSpout}
 import com.di.mesa.plugin.rabbitmq.RabbitmqConfigure
 import com.di.mesa.plugin.rabbitmq.storm.spout.RabbitMQSpout
-import com.di.mesa.plugin.storm.MesaTopologyBuilder
+import com.di.mesa.plugin.storm.{CommonConfiure, MesaTopologyBuilder}
 import com.di.mesa.plugin.zookeeper.storm.spout.ZookeeperSpout
+import com.weidian.di.storm.mesa.storm.constant.CommonConfiure
+import com.weidian.di.storm.mesa.storm.constant.CommonConfiure
+import com.weidian.di.storm.mesa.storm.constant.VdianMqConfigure
+import com.weidian.di.storm.mesa.storm.spout.VdianMQSpout
+import com.weidian.di.storm.mesa.storm.spout.VdianMQSpout
 import org.slf4j.{Logger, LoggerFactory}
 
 /**
@@ -80,6 +85,24 @@ private[mesa] trait MesaBaseTopology extends Tool {
     prepareTopologyConfig(args)
     prepareTopologyBuilder
     startTopology
+  }
+
+  protected def getVdianMQSpout: VdianMQSpout = {
+    var zkAddress: String = VdianMqConfigure.VMQ_DAILY_ADDRESS
+    if (config.isClusterMode) {
+      zkAddress = VdianMqConfigure.VMQ_ONLINE_ADDRESS
+    }
+
+    var topic: String = "test"
+    if (config.containsKey(VdianMqConfigure.VDIAN_MQ_SUBSCRIBED_TOPIC_NAME)) {
+      topic = config.get(VdianMqConfigure.VDIAN_MQ_SUBSCRIBED_TOPIC_NAME).toString
+    }
+    var groupName: String = "di_group_name"
+    if (config.containsKey(VdianMqConfigure.VDIAN_MQ_SUBSCRIBED_TOPIC_GROUPNAME)) {
+      groupName = config.get(VdianMqConfigure.VDIAN_MQ_SUBSCRIBED_TOPIC_GROUPNAME).toString
+    }
+
+    return new VdianMQSpout(60, topic, zkAddress, groupName)
   }
 
   //def isLocalMode: Boolean = config.isLocalMode

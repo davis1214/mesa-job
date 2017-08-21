@@ -44,6 +44,7 @@ public class MesaBaseBolt extends BaseRichBolt {
 
     protected final String UpdateSellerIdCost = "UpdateSellerIdCost";
     protected final String ParserCost = "ParserCost";
+    protected final String ParserError = "ParserError";
     protected final String TupleCount = "TupleCount";
     protected final String HbasePut = "HbasePut";
     protected final String ConstructHbasePut = "ConstructHbasePut";
@@ -265,6 +266,28 @@ public class MesaBaseBolt extends BaseRichBolt {
         recordCounter(meticCounter, ExecuteCost, (System.currentTimeMillis() - costTime.get()));
         recordMonitorLog();
     }
+
+    protected boolean getBooleanValue(Object object) {
+        String value = null;
+
+        if (object == null) {
+            return false;
+        }
+
+        return Boolean.valueOf(object.toString());
+    }
+
+
+    protected int getIntegerValue(Object object) {
+        String value = null;
+
+        if (object == null) {
+            return 0;
+        }
+
+        return Integer.valueOf(object.toString());
+    }
+
 
     protected String getStringValue(Object object) {
         String value = null;

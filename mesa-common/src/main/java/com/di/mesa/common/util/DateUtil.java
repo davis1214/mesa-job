@@ -34,6 +34,14 @@ public class DateUtil {
 		TimeZone.setDefault(tz);
 	}
 
+	public static long parseTime(String time) {
+		if (StrUtil.empty(time)) {
+			return 0L;
+		}
+		return StrUtil.string2Date(FORMAT_DATETIME, time).getTime();
+	}
+
+
 	public static synchronized long getDateLong(String in) {
 		long a = 0;
 		if (sdf == null) {

@@ -1,268 +1,219 @@
 package com.di.mesa.common.util;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
+
+import com.google.common.collect.Maps;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
+import static java.lang.System.out;
+
+/**
+ * Created by davi on 17/7/21.
+ */
+public class JsonUtils {
+
+    /**
+     * 将对象转换成Json字符串
+     *
+     * @param src
+     * @return
+     */
+    public static String toJson(Object src) {
+        return GSON.toJson(src);
+    }
+
+    /**
+     * 将Json转换成对象
+     *
+     * @param json
+     * @param classOfT
+     * @return
+     */
+    public static <T> T toEntity(String json, Class<T> classOfT) {
+        return GSON.fromJson(json, classOfT);
+    }
+
+    /**
+     * 将Json转化成Map
+     *
+     * @param json
+     * @return
+     */
+    public static Map<String, ?> toMap(String json) {
+        return GSON.fromJson(json, MAP_TYPE);
+    }
+
+    /**
+     * 将Json字符串转化成List
+     *
+     * @param json
+     * @param typeOfT
+     * @return
+     */
+    public static <T> List<T> toList(String json, Class<T> typeOfT) {
+        List<JsonObject> jsonObjectList = GSON.fromJson(json, JSON_OBJECT_TYPE);
+        List<T> list = new ArrayList<>();
+        for (JsonObject jsonObject : jsonObjectList) {
+            list.add(toEntity(jsonObject.toString(), typeOfT));
+        }
+        return list;
+    }
+
+    /**
+     * Json字符串转JsonObject
+     *
+     * @param json
+     * @return
+     */
+    public static JsonObject toJsonObject(String json) {
+        return JSON_PARSER.parse(json).getAsJsonObject();
+    }
+
+    /**
+     * 将JsonObject转换成Json字符串
+     *
+     * @param
+     * @return
+     */
+    public static String toJson(JsonObject jsonObject) {
+        return jsonObject.toString();
+    }
+
+    /**
+     * 禁止调用无参构造
+     *
+     * @throws Exception
+     */
+    private JsonUtils() throws Exception {
+        throw new Exception("Error...");
+    }
+
+    private static final Gson GSON = new Gson();
+
+    private static final JsonParser JSON_PARSER = new JsonParser();
+
+    private static final Type MAP_TYPE = new TypeToken<Map<String, ?>>() {
+    }.getType();
+
+    private static final Type JSON_OBJECT_TYPE = new TypeToken<List<JsonObject>>() {
+    }.getType();
 
 
-public class JSONUtils {
+    public static void main(String[] args) {
+        String a = "{\\\"messageType\\\":1,\\\"orderChangeToStatus\\\":0,\\\"orderInfoDO\\\":{\\\"add_time\\\":\\\"2017-07-12 04:01:44\\\",\\\"attributes\\\":{\\\"xl_game_id\\\":\\\"hainan\\\",\\\"source\\\":\\\"DETAIL\\\",\\\"wpartner_biz_id\\\":\\\"1038\\\",\\\"xl_fangka_id\\\":\\\"10001\\\",\\\"sup_price\\\":\\\"1776\\\",\\\"xl_user_account\\\":\\\"492166\\\",\\\"cnl\\\":\\\"fx\\\",\\\"v_a_id\\\":\\\"h5\\\"},\\\"buyer_id\\\":\\\"1228899494\\\",\\\"extend\\\":\\\",,h5!h5!NA!NA!1499803235288!NA,,,,,,,,,,,,,,,,,xl_game_id:hainan;source:DETAIL;wpartner_biz_id:1038;xl_fangka_id:10001;sup_price:1776;xl_user_account:492166;cnl:fx;v_a_id:h5;,,,,,,,,,,\\\",\\\"f_seller_id\\\":1117787090,\\\"flag\\\":3,\\\"flag_bin\\\":1060864,\\\"fx_fee\\\":12.0,\\\"id\\\":800064836749902,\\\"orderId\\\":800064836749902,\\\"orderStatus\\\":0,\\\"order_source\\\":401,\\\"order_status_des\\\":\\\"已关闭\\\",\\\"order_status_des_int\\\":0,\\\"refund_flag\\\":false,\\\"seller_id\\\":356895061,\\\"status\\\":60,\\\"sub_orders\\\":[{\\\"item_id\\\":1994950621,\\\"item_sku_id\\\":5890107232,\\\"quantity\\\":1}],\\\"total_price\\\":30.0,\\\"update_time\\\":\\\"2017-07-14 04:01:45\\\"}}";
 
-	/**
-	 * The constructor. Cannot construct this class.
-	 */
-	private JSONUtils() {
-	}
 
-	public static String toJSON(Object obj) {
-		return toJSON(obj, false);
-	}
+        String b = "{\"messageType\":1,\"orderChangeToStatus\":3,\"orderInfoDO\":{\"add_time\":\"2017-07-14 03:57:06\",\"attributes\":{},\"buyer_id\":\"1138431412\",\"extend\":\",,c,,,,,,,,,,,,,,,,,,,,,,,,,,,\",\"f_seller_id\":0,\"flag\":3,\"flag_bin\":67108864,\"fx_fee\":0.0,\"id\":800068954450205,\"orderId\":800068954450205,\"orderStatus\":3,\"order_source\":0,\"order_status_des\":\"已发货\",\"order_status_des_int\":3,\"refund_flag\":false,\"seller_id\":1185608641,\"ship_time\":\"2017-07-14 04:00:08\",\"status\":30,\"sub_orders\":[{\"item_id\":2057027159,\"item_sku_id\":0,\"quantity\":1}],\"total_price\":100.0,\"update_time\":\"2017-07-14 04:00:08\"}}";
 
-	public static String toJSON(Object obj, boolean prettyPrint) {
-		ObjectMapper mapper = new ObjectMapper();
 
-		try {
-			if (prettyPrint) {
-				ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-				return writer.writeValueAsString(obj);
-			}
-			return mapper.writeValueAsString(obj);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+        out.println(b);
 
-	public static void toJSON(Object obj, OutputStream stream) {
-		toJSON(obj, stream, false);
-	}
 
-	public static void toJSON(Object obj, OutputStream stream, boolean prettyPrint) {
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			if (prettyPrint) {
-				ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-				writer.writeValue(stream, obj);
-				return;
-			}
-			mapper.writeValue(stream, obj);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+        Map<String, ?> stringMap = toMap(b);
 
-	public static void toJSON(Object obj, File file) throws IOException {
-		toJSON(obj, file, false);
-	}
+        out.println(stringMap);
 
-	public static void toJSON(Object obj, File file, boolean prettyPrint) throws IOException {
-		BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
-		try {
-			toJSON(obj, stream, prettyPrint);
-		} finally {
-			stream.close();
-		}
-	}
-	
-	public static Object parseJSONToObject(String json,Class clazz) {
-		try {
-			ObjectMapper mapper = new ObjectMapper(); 
-			return mapper.readValue(json,clazz);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	public static Object parseJSONFromStringQuiet(String json) {
-		try {
-			return parseJSONFromString(json);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 
-	public static Object parseJSONFromString(String json) throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		JsonFactory factory = new JsonFactory();
-		JsonParser parser = factory.createJsonParser(json);
-		JsonNode node = mapper.readTree(parser);
+        Map<String, ?> orderInfoDO = (Map<String, ?>) stringMap.get("orderInfoDO");
 
-		return toObjectFromJSONNode(node);
-	}
+        out.println(orderInfoDO);
 
-	public static Object parseJSONFromFile(File file) throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		JsonFactory factory = new JsonFactory();
-		JsonParser parser = factory.createJsonParser(file);
-		JsonNode node = mapper.readTree(parser);
+        String orderStatus = orderInfoDO.get("orderStatus").toString();
+        String orderStatusDes = (String) orderInfoDO.get("order_status_des");
 
-		return toObjectFromJSONNode(node);
-	}
 
-	public static Object parseJSONFromReader(Reader reader) throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		JsonFactory factory = new JsonFactory();
-		JsonParser parser = factory.createJsonParser(reader);
-		JsonNode node = mapper.readTree(parser);
+        String update_time = (String) orderInfoDO.get("update_time");
 
-		return toObjectFromJSONNode(node);
-	}
+        String buyerId = (String) orderInfoDO.get("buyer_id");
+        Double sellerId = (Double) orderInfoDO.get("seller_id");
+        Double orderId = (Double) orderInfoDO.get("orderId");
 
-	private static Object toObjectFromJSONNode(JsonNode node) {
-		if (node.isObject()) {
-			HashMap<String, Object> obj = new HashMap<String, Object>();
-			Iterator<String> iter = node.getFieldNames();
-			while (iter.hasNext()) {
-				String fieldName = iter.next();
-				JsonNode subNode = node.get(fieldName);
-				Object subObj = toObjectFromJSONNode(subNode);
-				obj.put(fieldName, subObj);
-			}
+        out.println("\n");
+        out.println(orderStatus + " -> " + orderStatusDes + " -> " + update_time);
+        out.println(sellerId + " -> " + buyerId + " -> " + orderId);
+        out.println("format :" + sellerId.toString() + " -> " + buyerId + " -> " + orderId);
 
-			return obj;
-		} else if (node.isArray()) {
-			ArrayList<Object> array = new ArrayList<Object>();
-			Iterator<JsonNode> iter = node.getElements();
-			while (iter.hasNext()) {
-				JsonNode element = iter.next();
-				Object subObject = toObjectFromJSONNode(element);
-				array.add(subObject);
-			}
-			return array;
-		} else if (node.isTextual()) {
-			return node.asText();
-		} else if (node.isNumber()) {
-			if (node.isInt()) {
-				return node.asInt();
-			} else if (node.isLong()) {
-				return node.asLong();
-			} else if (node.isDouble()) {
-				return node.asDouble();
-			} else {
-				System.err.println("ERROR What is this!? " + node.getNumberType());
-				return null;
-			}
-		} else if (node.isBoolean()) {
-			return node.asBoolean();
-		} else {
-			return null;
-		}
-	}
 
-	public static long getLongFromObject(Object obj) {
-		if (obj instanceof Integer) {
-			return Long.valueOf((Integer) obj);
-		}
+        orderStatus = orderStatus.substring(0, orderStatus.indexOf("."));
+        Map<String, String> jsonMap = Maps.newHashMap();
+        jsonMap.put("sellerId", "121321");
+        jsonMap.put("buyerId", buyerId);
+        jsonMap.put("feedType", String.valueOf(Integer.valueOf(orderStatus) + 1000));
+        jsonMap.put("description", "已发货");
+        jsonMap.put("from", "tm_order_status");
+        jsonMap.put("feedTime", String.valueOf(System.currentTimeMillis() / 1000));
 
-		return (Long) obj;
-	}
 
-	/*
-	 * Writes json to a stream without using any external dependencies.
-	 * 
-	 * This is useful for plugins or extensions that want to write properties to
-	 * a writer without having to import the jackson, or json libraries. The
-	 * properties are expected to be a map of String keys and String values.
-	 * 
-	 * The other json writing methods are more robust and will handle more
-	 * cases.
-	 */
-	public static void writePropsNoJarDependency(Map<String, String> properties, Writer writer) throws IOException {
-		writer.write("{\n");
-		int size = properties.size();
+        out.println("\n");
+        out.println("----->" + JsonUtils.toJson(jsonMap));
 
-		for (Map.Entry<String, String> entry : properties.entrySet()) {
-			// tab the space
-			writer.write('\t');
-			// Write key
-			writer.write(quoteAndClean(entry.getKey()));
-			writer.write(':');
-			writer.write(quoteAndClean(entry.getValue()));
 
-			size -= 1;
-			// Add comma only if it's not the last one
-			if (size > 0) {
-				writer.write(',');
-			}
-			writer.write('\n');
-		}
-		writer.write("}");
-	}
+        String aa = "{\"itemRefundDO\":{\"buyer_id\":\"976692970\",\"f_seller_id\":\"\",\"item_list\":[{\"item_id\":\"1909314091\",\"item_sku_id\":\"\"}],\"operate_role\":" +
+                "\"buyer\",\"order_flag_bin\":0,\"order_id\":774597417969857,\"refund_express_fee\":0,\"refund_fee\":9000,\"refund_item_fee\":9000,\"refund_kind\":1," +
+                "\"refund_no\":4421716,\"refund_operate_status_desc\":\"买家申请退款，待商家处理\",\"refund_operate_status_int\":100,\"refund_status_desc\":\"申请退款\"," +
+                "\"refund_status_int\":101,\"seller_id\":314582724,\"update_time\":1499992875000},\"messageType\":2}";
 
-	private static String quoteAndClean(String str) {
-		if (str == null || str.isEmpty()) {
-			return "\"\"";
-		}
 
-		StringBuffer buffer = new StringBuffer(str.length());
-		buffer.append('"');
-		for (int i = 0; i < str.length(); ++i) {
-			char ch = str.charAt(i);
+        stringMap = JsonUtils.toMap(aa);
 
-			switch (ch) {
-			case '\b':
-				buffer.append("\\b");
-				break;
-			case '\t':
-				buffer.append("\\t");
-				break;
-			case '\n':
-				buffer.append("\\n");
-				break;
-			case '\f':
-				buffer.append("\\f");
-				break;
-			case '\r':
-				buffer.append("\\r");
-				break;
-			case '"':
-			case '\\':
-			case '/':
-				buffer.append('\\');
-				buffer.append(ch);
-				break;
-			default:
-				if (isCharSpecialUnicode(ch)) {
-					buffer.append("\\u");
-					String hexCode = Integer.toHexString(ch);
-					int lengthHexCode = hexCode.length();
-					if (lengthHexCode < 4) {
-						buffer.append("0000".substring(0, 4 - lengthHexCode));
-					}
-					buffer.append(hexCode);
-				} else {
-					buffer.append(ch);
-				}
-			}
-		}
-		buffer.append('"');
-		return buffer.toString();
-	}
 
-	private static boolean isCharSpecialUnicode(char ch) {
-		if (ch < ' ') {
-			return true;
-		} else if (ch >= '\u0080' && ch < '\u00a0') {
-			return true;
-		} else if (ch >= '\u2000' && ch < '\u2100') {
-			return true;
-		}
+        out.println("======>" + stringMap);
+        Map<String, ?> orderInfoDO2 = (Map<String, ?>) stringMap.get("itemRefundDO");
 
-		return false;
-	}
-	
+        String buyerId2 = (String) orderInfoDO2.get("buyer_id");
+        Double sellerId2 = (Double) orderInfoDO2.get("seller_id");
+        Double orderId2 = (Double) orderInfoDO2.get("order_id");
+
+        Object aaaaa = orderInfoDO2.get("order_id");
+
+        out.println(aaaaa.getClass().getCanonicalName());
+
+        // update_time = (String) orderInfoDO2.get("update_time");
+        orderStatusDes = (String) orderInfoDO2.get("refund_status_desc");
+        Double refund_status_int = (Double) orderInfoDO2.get("refund_status_int");
+
+
+        out.println(buyerId2 + " -> " + buyerId2 + " -> " + orderId2);
+        out.println(orderInfoDO2.get("update_time") + " --> " + orderStatusDes + " --> " + refund_status_int);
+        out.println("format :" + sellerId2.toString() + " -> " + buyerId2 + " -> " + orderId2);
+
+        Object fSellerId = orderInfoDO2.get("f_seller_id");
+        out.println("fSellerId :" + fSellerId + ", fSellerId ==null :" + (fSellerId.equals("")));
+
+        out.println(getStringValue(fSellerId));
+
+//        Object o = orderInfoDO.get("buyer_id");
+//        out.println(getStringValue(o));
+//        out.println(getStringValue(orderInfoDO.get("seller_id")));
+//        out.println(getStringValue(orderInfoDO.get("orderId")));
+//        out.println("orderStatus:"+getStringValue(orderInfoDO.get("orderStatus")).substring(0,orderStatus.indexOf(".")));
+//        out.println("order_status_des:"+getStringValue(orderInfoDO.get("order_status_des")));
+
+    }
+//
+    public static String getStringValue(Object object) {
+        String value = null;
+        if (object instanceof String) {
+            value = object.toString();
+            System.err.println("string type : [" + value + "]");
+        } else if (object instanceof Double) {
+            BigDecimal d1 = new BigDecimal(object.toString());
+            value = d1.toString();
+            System.err.println("Double type : [" + value + "]");
+        }else{
+            System.err.println("ambi type : [" + value + "]");
+        }
+
+        return value;
+    }
+
+
 }
