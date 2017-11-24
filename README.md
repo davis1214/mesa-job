@@ -1,7 +1,11 @@
 
-
 #### mesa项目介绍
-通用化的六处理任务平台
+通用化的任务
+
+#### 任务类型
+- strom任务
+- spark任务
+- spark-streaming任务
 
 
 #### 开发语言
@@ -32,7 +36,7 @@ java(1.8) \scala (2.11.8) \python 3.5
 * KuduBolt ``增加kudu数据的写入``
 
 
-####
-
-
+#### mesa-metric
+提供基于opentsdb的监控告警服务.服务于Mesa实时流服务.
+使用方法常见模块README
 
