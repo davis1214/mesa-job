@@ -1,0 +1,39 @@
+{
+  "alarmConcerner": {
+    "tellers": [
+      "1360101001",
+      "1360101002"
+    ],
+    "mailTeller": [
+      "yourname@company.com"
+    ]
+  },
+  "malarmConditions": [
+    {
+      "type": 9,
+      "period": 300,
+      "slideType": 1,
+      "threshold": "40"
+    },
+    {
+      "type": 2,
+      "period": 1,
+      "slideType": 1,
+      "threshold": "300"
+    }
+  ],
+  "computeDimension": {
+    "computeField": "PutCount",
+    "computeType": 2,
+    "boltName": "MesaBoltName"
+  },
+  "mAlarmId": "di_mesa_name_ComparedPutCount",
+  "alarmMetric": "di_mesa_bhv_online",
+  "alarmType": 2,
+  "alarmFrequency": 300,
+  "alarmCount": 0,
+  "alarmTriggerCount": "1",
+  "isAlarm": 1,
+  "connectionType": "and",
+  "template": "[告警]实时流任务[${name}] 行为数据波动异常 ,告警时间 ${time} , 告警内容:{${record}}"
+}

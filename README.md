@@ -31,9 +31,8 @@ java(1.8) \scala (2.11.8) \python 3.5
 * RabbitSpout ``扩展实现rabbit mq队列``
 * KuduBolt ``增加kudu数据的写入``
 
-#### 未来规划
-`考虑集成最近比较火的serverless`
 
+####
 
 
 

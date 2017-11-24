@@ -11,11 +11,6 @@ import com.di.mesa.plugin.rabbitmq.RabbitmqConfigure
 import com.di.mesa.plugin.rabbitmq.storm.spout.RabbitMQSpout
 import com.di.mesa.plugin.storm.{CommonConfiure, MesaTopologyBuilder}
 import com.di.mesa.plugin.zookeeper.storm.spout.ZookeeperSpout
-import com.weidian.di.storm.mesa.storm.constant.CommonConfiure
-import com.weidian.di.storm.mesa.storm.constant.CommonConfiure
-import com.weidian.di.storm.mesa.storm.constant.VdianMqConfigure
-import com.weidian.di.storm.mesa.storm.spout.VdianMQSpout
-import com.weidian.di.storm.mesa.storm.spout.VdianMQSpout
 import org.slf4j.{Logger, LoggerFactory}
 
 /**

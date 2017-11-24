@@ -1,0 +1,32 @@
+{
+  "alarmConcerner": {
+    "tellers": [
+      "1360101001",
+      "1360101002"
+    ],
+    "mailTeller": [
+      "yourname@company.com"
+    ]
+  },
+  "malarmConditions": [
+    {
+      "type": 4,
+      "period": 1,
+      "slideType": 1,
+      "threshold": "0"
+    }
+  ],
+  "computeDimension": {
+    "computeField": "PutCount",
+    "computeType": 3,
+    "boltName": "MesaBoltName"
+  },
+  "mAlarmId": "di_mesa_name_PutCount",
+  "alarmMetric": "di_mesa_bhv_online",
+  "alarmType": 2,
+  "alarmFrequency": 300,
+  "alarmCount": 0,
+  "alarmTriggerCount": "1",
+  "isAlarm": 1,
+  "connectionType": "and"
+}

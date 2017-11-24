@@ -1,0 +1,114 @@
+[
+    {
+        "metric": "di_mesa_kudu_order",
+        "tags": {
+            "bolt.name": "MesaOrderKuduBolt",
+            "PutCount": "PutCount"
+        },
+        "aggregateTags": [
+            "task.index"
+        ],
+        "query": {
+            "aggregator": "avg",
+            "metric": "di_mesa_kudu_order",
+            "tsuids": null,
+            "downsample": null,
+            "rate": false,
+            "filters": [
+                {
+                    "tagk": "bolt.name",
+                    "filter": "MesaOrderKuduBolt",
+                    "group_by": true,
+                    "type": "literal_or"
+                },
+                {
+                    "tagk": "PutCount",
+                    "filter": "PutCount",
+                    "group_by": true,
+                    "type": "literal_or"
+                }
+            ],
+            "rateOptions": null,
+            "tags": {
+                "PutCount": "literal_or(PutCount)",
+                "bolt.name": "literal_or(MesaOrderKuduBolt)"
+            }
+        },
+        "tsuids": [
+            "00034A0000D5E50FE30000D7067EC00000DD08391E",
+            "00034A0000D5E50FE30000D7067EC20000DD08391E"
+        ],
+        "dps": {
+            "1507633222": 1027,
+            "1507633278": 1017,
+            "1507633282": 1019,
+            "1507633338": 1152,
+            "1507633342": 1157,
+            "1507633398": 1167,
+            "1507633402": 1162,
+            "1507633458": 1036,
+            "1507633462": 1044,
+            "1507633518": 1205,
+            "1507633522": 1121
+        }
+    },
+    {
+        "statsSummary": {
+            "avgAggregationTime": 0.1749,
+            "avgHBaseTime": 4.904152,
+            "avgQueryScanTime": 5.458675,
+            "avgScannerTime": 5.403205,
+            "avgScannerUidToStringTime": 0,
+            "avgSerializationTime": 4.195926,
+            "dpsPostFilter": 12,
+            "dpsPreFilter": 12,
+            "emittedDPs": 11,
+            "maxAggregationTime": 0.1749,
+            "maxHBaseTime": 4.904152,
+            "maxQueryScanTime": 5.458675,
+            "maxScannerUidtoStringTime": 0,
+            "maxSerializationTime": 4.195926,
+            "maxUidToStringTime": 0.10382,
+            "processingPreWriteTime": 11.018172,
+            "queryIdx_00": {
+                "aggregationTime": 0.1749,
+                "avgHBaseTime": 4.904152,
+                "avgScannerTime": 5.403205,
+                "avgScannerUidToStringTime": 0,
+                "dpsPostFilter": 12,
+                "dpsPreFilter": 12,
+                "emittedDPs": 11,
+                "groupByTime": 0,
+                "maxHBaseTime": 4.904152,
+                "maxScannerUidtoStringTime": 0,
+                "queryIndex": 0,
+                "queryScanTime": 5.458675,
+                "rowsPostFilter": 2,
+                "rowsPreFilter": 2,
+                "scannerStats": {
+                    "scannerIdx_00": {
+                        "compactionTime": 0.026067,
+                        "dpsPostFilter": 12,
+                        "dpsPreFilter": 12,
+                        "hbaseTime": 4.904152,
+                        "rowsPostFilter": 2,
+                        "rowsPreFilter": 2,
+                        "scannerId": null,
+                        "scannerTime": 5.403205,
+                        "scannerUidToStringTime": 0,
+                        "successfulScan": 1,
+                        "uidPairsResolved": 0
+                    }
+                },
+                "serializationTime": 4.195926,
+                "successfulScan": 1,
+                "uidPairsResolved": 0,
+                "uidToStringTime": 0.10382
+            },
+            "rowsPostFilter": 2,
+            "rowsPreFilter": 2,
+            "successfulScan": 1,
+            "uidPairsResolved": 0
+        }
+    }
+]

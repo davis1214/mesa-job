@@ -18,6 +18,7 @@
         <module>mesa-spark-job</module>
         <module>mesa-streaming-job</module>
         <module>mesa-jstorm-job</module>
+        <module>mesa-metric</module>
     </modules>
 
     <properties>

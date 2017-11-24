@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy/MM/dd HH:mm:ss.SSS Z} %p [%c{}] %m%n
+			</pattern>
+		</encoder>
+
+		<!-- 只输出level级别的日志 -->
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>debug</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>./logs/di-monitor-com.di.mesa.metric.alarm.log
+		</File>
+		<encoder>
+			<pattern>%d{yyyy/MM/dd HH:mm:ss.SSS Z} %p [%c{}] %m%n
+			</pattern>
+		</encoder>
+
+		<!-- 只输出level级别以上的日志 -->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>debug</level>
+		</filter>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>./logs/di-monitor-com.di.mesa.metric.alarm.log.%d{yyyyMMddHH}
+			</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+
+	<logger name="org.logback.test.LogbackTest" level="DEBUGE" />
+
+	<root level="DEBUGE">
+		<appender-ref ref="FILE" />
+		<appender-ref ref="stdout" />
+	</root>
+</configuration>

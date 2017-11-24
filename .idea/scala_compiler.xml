@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ScalaCompilerConfiguration">
-    <profile name="Maven 1" modules="mesa-spark-job,mesa-common,mesa-streaming-job,mesa-plugin,mesa-tool,mesa-job,mesa-jstorm-job" />
+    <profile name="Maven 1" modules="mesa-tool,mesa-metric,mesa-plugin,mesa-spark-job,mesa-jstorm-job,mesa-streaming-job,mesa-job,mesa-common" />
   </component>
 </project>

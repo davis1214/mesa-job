@@ -1,6 +1,7 @@
 package com.di.mesa.streamingjob.monitor
 
 import com.di.mesa.streamingjob.monitor.manager.KafkaManager
+import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.{Logging, SparkConf}
 
 /**

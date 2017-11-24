@@ -1,0 +1,17 @@
+site_name: Mesa-Metric项目文档
+repo_url: https://gitlab.vdian.net/di/mesa-metric
+repo_name: GitLab
+site_description: A standardized project
+site_author: Davi
+copyright: ©2017 DataScience-RD DS Team
+extra:
+    version: 1.0
+pages:
+    - 首页: index.md
+    - 业务需求: requirements.md
+    - 配置说明: how-to-use.md
+    - 发布方式: how-to-publish.md
+    - 监控告警项: configured-metrics.md
+    - Git使用说明: gitlab-ci.md
+    - MkDocs使用说明: how-to-use-mkdocs.md
+#theme: readthedocs

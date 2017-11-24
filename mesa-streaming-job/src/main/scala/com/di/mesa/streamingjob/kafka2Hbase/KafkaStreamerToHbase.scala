@@ -11,6 +11,8 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.hbase.client.{HBaseAdmin, HConnection, HConnectionManager, HTableInterface}
 import org.apache.hadoop.hbase.{HBaseConfiguration, HTableDescriptor, TableName}
 import org.apache.hadoop.security.UserGroupInformation
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.kafka.KafkaUtils
 import org.apache.spark.{Logging, SparkConf}
 
 /**

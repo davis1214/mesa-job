@@ -28,7 +28,7 @@ private[mesa] class StgOrderInfoEtlTopology extends MesaBaseTopology {
     workers = 2
 
     this.config.put(CommonConfiure.SHOULD_RECORD_METRIC_TO_OPENTSDB, "false")
-    this.config.put(CommonConfiure.OPENTSDB_URL, "http://10.8.96.120:4242,http://10.8.96.121:4242,http://10.8.96.122:4242")
+    this.config.put(CommonConfiure.OPENTSDB_URL, "http://192.8.97.120:4242,http://10.8.96.121:4242,http://192.8.97.122:4242")
 
 
     //enable zk notifier
@@ -42,9 +42,9 @@ private[mesa] class StgOrderInfoEtlTopology extends MesaBaseTopology {
 
     //prepare kudu config
     this.config.put(KuduConfigure.KUDU_TABLE_NAME, "kudu_mesa.stg_order_info")
-    this.config.put(KuduConfigure.KUDU_MASTER_ADDRESS, "10.1.7.111,10.1.7.112")
+    this.config.put(KuduConfigure.KUDU_MASTER_ADDRESS, "192.8.1.111,192.8.1.112")
     this.config.put(KuduConfigure.KUDU_OPERATION_PROP, KuduConfigure.KUDU_OPERATION_INSERT)
-    this.config.put(KuduConfigure.KUDU_BOLT_PRODUCER, "com.weidian.di.storm.mesa.storm.kudu.StgOrderInfoOperProducer")
+    this.config.put(KuduConfigure.KUDU_BOLT_PRODUCER, "com.di.storm.mesa.storm.kudu.StgOrderInfoOperProducer")
 
     if (config.isLocalMode) {
       workers = 1
